@@ -1,13 +1,15 @@
 <script>
-import Nav from "../components/nav.svelte";
+	import Footer from '../components/Footer.svelte';
+	import Header from '../components/Header.svelte';
 </script>
-<div class="p-8 max-w-6xl mx-auto">
-    <Nav/>
-    <slot>
-    </slot>
+
+<div>
+	<Header />
+	<slot />
+	<Footer />
 </div>
-<style>
+<!-- <style>
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-</style>
+</style> -->
