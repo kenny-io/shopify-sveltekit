@@ -3,3 +3,8 @@ node_modules
 /.svelte-kit
 /build
 /functions
+.eslintrc.cjs
+.npmrc
+.prettierignore
+.prettierrc
+.env
