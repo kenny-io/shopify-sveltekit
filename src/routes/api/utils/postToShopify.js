@@ -2,17 +2,14 @@
 
 export const postToShopify = async ({ query, variables }) => {
 	try {
-		const result = await fetch(
-			'https://netlify-developer-starter.myshopify.com/api/unstable/graphql.json',
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-Shopify-Storefront-Access-Token': 'e9c4dbd5f540d4cefcb2518f7648caf9'
-				},
-				body: JSON.stringify({ query, variables })
-			}
-		).then((res) => res.json());
+		const result = await fetch(process.env.SHOPIFY_API_ENDPOINT, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-Shopify-Storefront-Access-Token': process.env.SHOPIFY_STOREFRONT_API_TOKEN
+			},
+			body: JSON.stringify({ query, variables })
+		}).then((res) => res.json());
 
 		if (result.errors) {
 			console.log({ errors: result.errors });
