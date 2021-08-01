@@ -4,13 +4,19 @@
 	import CartTable from '../components/CartTable.svelte';
 	import CartTotal from '../components/CartTotal.svelte';
 	import { onMount } from 'svelte';
+	import supabase from '$lib/database';
 
 	let cart;
 	let cartItems = [];
-	onMount(() => {
-		// get all the cart details we need from localStorage
-		cart = JSON.parse(localStorage.getItem('cart'));
-		cartItems = cart.lines.edges;
+	onMount(async () => {
+		// get all the cart details we need from Suapabase
+		try {
+			const { data, error } = await supabase.from('cart').select('cart');
+			cart = data[0].cart;
+			cartItems = data[0].cart.lines.edges;
+		} catch (e) {
+			console.log(e);
+		}
 	});
 </script>
 

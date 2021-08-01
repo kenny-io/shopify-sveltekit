@@ -2,11 +2,18 @@
 	// @ts-nocheck
 	import { formatCurrency } from '../utils/currency';
 	import { onMount } from 'svelte';
+	import supabase from '$lib/database';
 	let cartItems = [];
 	let cart;
-	onMount(() => {
-		cart = JSON.parse(localStorage.getItem('cart'));
-		cartItems = cart.lines.edges;
+	onMount(async () => {
+		try {
+			const { data, error } = await supabase.from('cart').select('cart');
+			cart = data[0].cart;
+
+			cartItems = data[0].cart.lines.edges;
+		} catch (e) {
+			console.log(e);
+		}
 	});
 
 	function itemTotal(price, quantity) {

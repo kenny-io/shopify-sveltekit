@@ -1,18 +1,24 @@
 <script>
 	import { onMount } from 'svelte';
+	import supabase from '$lib/database';
 	let cart;
 	let subtotal;
 	let currency;
 	let total;
 	let tax;
 
-	onMount(() => {
-		// get all the cart details we need from localStorage
-		cart = JSON.parse(localStorage.getItem('cart'));
-		subtotal = cart.estimatedCost.subtotalAmount.amount;
-		currency = cart.estimatedCost.subtotalAmount.currencyCode;
-		total = cart.estimatedCost.totalAmount.amount;
-		tax = cart.estimatedCost.totalTaxAmount.amount || 0;
+	onMount(async () => {
+		// get all the cart details we need from Supabase
+		try {
+			const { data, error } = await supabase.from('cart').select('cart');
+			cart = data[0].cart;
+			subtotal = cart.estimatedCost.subtotalAmount.amount;
+			currency = cart.estimatedCost.subtotalAmount.currencyCode;
+			total = cart.estimatedCost.totalAmount.amount;
+			tax = cart.estimatedCost.totalTaxAmount.amount || 0;
+		} catch (e) {
+			console.log(e);
+		}
 	});
 </script>
 

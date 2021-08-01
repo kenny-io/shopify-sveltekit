@@ -8,9 +8,6 @@ export async function post(request) {
 			cartId,
 			lineId
 		});
-		// const newCart = await shopifyResponse;
-		// console.log(newCart);
-
 		return {
 			statusCode: 200,
 			body: JSON.stringify(shopifyResponse.cartLinesRemove.cart)

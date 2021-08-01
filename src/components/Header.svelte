@@ -1,15 +1,21 @@
 <script>
 	import { onMount } from 'svelte';
+	import supabase from '$lib/database';
 
 	let count;
 	import '../../src/app.css';
 	let cart;
 
-	onMount(() => {
-		cart = JSON.parse(localStorage.getItem('cart'));
-		if (cart) {
-			count = cart.lines.edges.length;
-		}
+	onMount(async () => {
+		// cart = JSON.parse(localStorage.getItem('cart'));
+		// if (cart) {
+		// 	count = cart.lines.edges.length;
+		// }
+		try {
+			const { data, error } = await supabase.from('cart').select('cart');
+			// console.log(data[0].cart);
+			count = data[0].cart.lines.edges.length;
+		} catch {}
 	});
 </script>
 
@@ -22,13 +28,13 @@
 					<a href="/">All</a>
 				</li>
 				<li class="main-nav-item">
-					<a href="/?type=cheese">Cheeses</a>
+					<a href="?type=cheese">Cheeses</a>
 				</li>
 				<li class="main-nav-item">
-					<a href="/?type=meat">Meats</a>
+					<a href="?type=meat">Meats</a>
 				</li>
 				<li class="main-nav-item">
-					<a href="/?type=boards">Boards</a>
+					<a href="?type=boards">Boards</a>
 				</li>
 				<li class="main-nav-item">
 					{#if count}
