@@ -1,21 +1,11 @@
 <script>
 	import { onMount } from 'svelte';
-	import supabase from '$lib/database';
-
+	import { getCart } from '../utils/get-cart';
 	let count;
-	import '../../src/app.css';
-	let cart;
 
 	onMount(async () => {
-		// cart = JSON.parse(localStorage.getItem('cart'));
-		// if (cart) {
-		// 	count = cart.lines.edges.length;
-		// }
-		try {
-			const { data, error } = await supabase.from('cart').select('cart');
-			// console.log(data[0].cart);
-			count = data[0].cart.lines.edges.length;
-		} catch {}
+		const data = await getCart();
+		count = data.lines.edges.length;
 	});
 </script>
 

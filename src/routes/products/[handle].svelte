@@ -62,6 +62,7 @@
 						body: JSON.stringify(cart)
 					});
 					const supabaseresponse = await addCartToDB.json();
+					window.location.reload(true);
 					console.log(supabaseresponse);
 					return supabaseresponse;
 				} catch (e) {

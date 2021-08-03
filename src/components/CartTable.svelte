@@ -1,19 +1,15 @@
 <script>
 	// @ts-nocheck
 	import { formatCurrency } from '../utils/currency';
+	import { getCart } from '../utils/get-cart';
 	import { onMount } from 'svelte';
-	import supabase from '$lib/database';
 	let cartItems = [];
 	let cart;
+	let cartId;
 	onMount(async () => {
-		try {
-			const { data, error } = await supabase.from('cart').select('cart');
-			cart = data[0].cart;
-
-			cartItems = data[0].cart.lines.edges;
-		} catch (e) {
-			console.log(e);
-		}
+		const data = await getCart();
+		cartId = data.id;
+		cartItems = data.lines.edges;
 	});
 
 	function itemTotal(price, quantity) {
@@ -26,16 +22,26 @@
 		const removeItemFromCart = await fetch('/api/remove-from-cart', {
 			method: 'POST',
 			body: JSON.stringify({
-				cartId: localStorage.getItem('cartId'),
+				cartId,
 				lineId
 			})
 		})
 			.then((res) => res.json())
 			.then((data) => data);
 
-		// update localStorage;
-		localStorage.setItem('cartId', removeItemFromCart.id);
-		localStorage.setItem('cart', JSON.stringify(removeItemFromCart));
+		// remove item from Supabase
+		try {
+			const removeItemFromDB = await fetch('/api/update-supabase-cart', {
+				method: 'POST',
+				body: JSON.stringify(removeItemFromCart)
+			});
+			const supabaseResponse = await removeItemFromDB.json();
+			console.log(supabaseresponse);
+			return supabaseResponse;
+		} catch (e) {
+			console.log(e);
+		}
+
 		window.location.reload(true);
 	}
 </script>

@@ -1,15 +1,8 @@
-<script>
+<script context="module">
 	// @ts-nocheck
-
-	import CartTable from '../components/CartTable.svelte';
-	import CartTotal from '../components/CartTotal.svelte';
-	import { onMount } from 'svelte';
-	import supabase from '$lib/database';
-
-	let cart;
-	let cartItems = [];
-	onMount(async () => {
-		// get all the cart details we need from Suapabase
+	export async function load(ctx) {
+		let cart;
+		let cartItems = [];
 		try {
 			const { data, error } = await supabase.from('cart').select('cart');
 			cart = data[0].cart;
@@ -17,7 +10,15 @@
 		} catch (e) {
 			console.log(e);
 		}
-	});
+		return { props: { cartItems } };
+	}
+</script>
+
+<script>
+	import CartTable from '../components/CartTable.svelte';
+	import CartTotal from '../components/CartTotal.svelte';
+	import supabase from '$lib/database';
+	export let cartItems;
 </script>
 
 <section>

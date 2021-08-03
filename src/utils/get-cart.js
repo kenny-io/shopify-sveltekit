@@ -1,59 +1,13 @@
-import { postToShopify } from './postToShopify';
-
-export const getCart = async (event) => {
-	const { cartId } = JSON.parse(event.body);
-
+import supabase from '$lib/database';
+export const getCart = async () => {
+	let cart;
 	try {
-		const shopifyResponse = await postToShopify({
-			query: `
-        query getCart($cartId: ID!) {
-          cart(id: $cartId) {
-            id
-            lines(first: 10) {
-              edges {
-                node {
-                  id
-                  quantity
-                  merchandise {
-                    ... on ProductVariant {
-                      id
-                      title
-                    }
-                  }
-                }
-              }
-            }
-            estimatedCost {
-              totalAmount {
-                amount
-                currencyCode
-              }
-              subtotalAmount {
-                amount
-                currencyCode
-              }
-              totalTaxAmount {
-                amount
-                currencyCode
-              }
-              totalDutyAmount {
-                amount
-                currencyCode
-              }
-            }
-          }
-        }
-      `,
-			variables: {
-				cartId
-			}
-		});
-
-		return {
-			statusCode: 200,
-			body: JSON.stringify(shopifyResponse)
-		};
-	} catch (error) {
-		console.log(error);
+		const { data, error } = await supabase.from('cart').select('cart');
+		cart = data[0].cart;
+		return cart;
+	} catch (e) {
+		console.log(e);
 	}
+
+	return cart;
 };
