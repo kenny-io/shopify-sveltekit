@@ -1,17 +1,14 @@
-import { postToShopify } from './postToShopify';
+const { postToShopify } = require("./postToShopify");
 
-// Creates a cart with a single item
-export const createCartWithItem = async ({ itemId, quantity }) => {
-	try {
-		const response = await postToShopify({
-			query: `
-        mutation createCart($cartInput: CartInput) {
-          cartCreate(input: $cartInput) {
+exports.removeItemFromCart = async ({ cartId, lineId }) => {
+  try {
+    const shopifyResponse = await postToShopify({
+      query: `
+        mutation removeItemFromCart($cartId: ID!, $lineIds: [ID!]!) {
+          cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
             cart {
               id
-              createdAt
-              updatedAt
-              lines(first:10) {
+              lines(first: 10) {
                 edges {
                   node {
                     id
@@ -25,8 +22,8 @@ export const createCartWithItem = async ({ itemId, quantity }) => {
                           currencyCode
                         }
                         product {
-                          id
                           title
+                          handle
                         }
                       }
                     }
@@ -55,20 +52,14 @@ export const createCartWithItem = async ({ itemId, quantity }) => {
           }
         }
       `,
-			variables: {
-				cartInput: {
-					lines: [
-						{
-							quantity,
-							merchandiseId: itemId
-						}
-					]
-				}
-			}
-		});
+      variables: {
+        cartId,
+        lineIds: [lineId],
+      },
+    });
 
-		return response;
-	} catch (error) {
-		console.log(error);
-	}
+    return shopifyResponse;
+  } catch (error) {
+    console.log(error);
+  }
 };

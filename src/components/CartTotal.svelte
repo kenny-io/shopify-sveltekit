@@ -1,19 +1,14 @@
 <script>
-	import { onMount } from 'svelte';
-	let cart;
-	let subtotal;
-	let currency;
-	let total;
-	let tax;
+	let cart = JSON.parse(localStorage.getItem('cart'));
+	let subtotal = cart.estimatedCost.subtotalAmount.amount;
+	let currency = cart.estimatedCost.subtotalAmount.currencyCode;
+	let total = cart.estimatedCost.totalAmount.amount;
+	let tax = cart.estimatedCost.totalTaxAmount.amount;
 
-	onMount(() => {
-		// get all the cart details we need from localStorage
-		cart = JSON.parse(localStorage.getItem('cart'));
-		subtotal = cart.estimatedCost.subtotalAmount.amount;
-		currency = cart.estimatedCost.subtotalAmount.currencyCode;
-		total = cart.estimatedCost.totalAmount.amount;
-		tax = cart.estimatedCost.totalTaxAmount.amount || 0;
-	});
+	function calculateTax(tax) {
+		if (tax) return tax;
+		return 0;
+	}
 </script>
 
 <section class="cart-total">
@@ -31,7 +26,7 @@
 				<strong>{currency} {subtotal}</strong>
 			</p>
 			<p>Free Shipping</p>
-			<p>{currency} {tax}</p>
+			<p>{currency} {calculateTax(tax)}</p>
 			<p>{currency} {total}</p>
 		</div>
 	</div>

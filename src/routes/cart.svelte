@@ -1,14 +1,12 @@
 <script>
 	// @ts-nocheck
-
 	import CartTable from '../components/CartTable.svelte';
 	import CartTotal from '../components/CartTotal.svelte';
 	import { onMount } from 'svelte';
-
 	let cart;
 	let cartItems = [];
 	onMount(() => {
-		// get all the cart details we need from localStorage
+		// get cart details from localStorage
 		cart = JSON.parse(localStorage.getItem('cart'));
 		cartItems = cart.lines.edges;
 	});

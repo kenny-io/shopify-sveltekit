@@ -1,10 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
-
 	let count;
 	import '../../src/app.css';
 	let cart;
-
 	onMount(() => {
 		cart = JSON.parse(localStorage.getItem('cart'));
 		if (cart) {
@@ -30,6 +28,18 @@
 				<li class="main-nav-item">
 					<a href="/?type=boards">Boards</a>
 				</li>
+				<!-- <li class="main-nav-item">
+					<Link to="/">All</Link>
+				</li>
+				<li class="main-nav-item">
+					<Link to="/?type=cheese">Cheeses</Link>
+				</li>
+				<li class="main-nav-item">
+					<Link to="/?type=meat">Meats</Link>
+				</li>
+				<li class="main-nav-item">
+					<Link to="/?type=board">Boards</Link>
+				</li> -->
 				<li class="main-nav-item">
 					{#if count}
 						<div class="cart-size">{count}</div>

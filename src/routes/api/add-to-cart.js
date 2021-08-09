@@ -2,13 +2,8 @@ import { createCartWithItem } from './utils/createCartWithItem';
 import { addItemToCart } from './utils/addItemToCart';
 
 export async function post(request) {
-	// console.log(request.body);
-
-	const { cartId, itemId, quantity } = JSON.parse(request.body);
-	const itemQuantity = Number(quantity);
-
-	console.log(cartId, itemId, itemQuantity);
-
+	let { cartId, itemId, quantity } = JSON.parse(request.body);
+	quantity = parseInt(quantity);
 	if (cartId) {
 		console.log('--------------------------------');
 		console.log('Adding item to existing cart...');
@@ -18,9 +13,9 @@ export async function post(request) {
 			cartId,
 			itemId,
 			// @ts-ignore
-			itemQuantity
+			quantity
 		});
-		console.log(shopifyResponse);
+
 		return {
 			statusCode: 200,
 			body: JSON.stringify(shopifyResponse.cartLinesAdd.cart)
@@ -32,11 +27,8 @@ export async function post(request) {
 		const createCartResponse = await createCartWithItem({
 			itemId,
 			// @ts-ignore
-			itemQuantity
+			quantity
 		});
-
-		console.log(createCartResponse);
-
 		return {
 			statusCode: 200,
 			body: JSON.stringify(createCartResponse.cartCreate.cart)

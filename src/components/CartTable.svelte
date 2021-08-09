@@ -8,12 +8,10 @@
 		cart = JSON.parse(localStorage.getItem('cart'));
 		cartItems = cart.lines.edges;
 	});
-
 	function itemTotal(price, quantity) {
 		const totalPrice = Number(price) * Number(quantity);
 		return totalPrice.toFixed(2);
 	}
-
 	async function removeItem(lineId) {
 		// remove item from Shopify cart
 		const removeItemFromCart = await fetch('/api/remove-from-cart', {
@@ -25,11 +23,10 @@
 		})
 			.then((res) => res.json())
 			.then((data) => data);
-
 		// update localStorage;
 		localStorage.setItem('cartId', removeItemFromCart.id);
 		localStorage.setItem('cart', JSON.stringify(removeItemFromCart));
-		window.location.reload(true);
+		location.reload();
 	}
 </script>
 

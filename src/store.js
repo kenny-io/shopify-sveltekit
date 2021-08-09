@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { postToShopify } from './utils/postToShopify';
+import { postToShopify } from '../src/routes/api/utils/postToShopify';
 
 export const products = writable([]);
 export const productDetails = writable([]);
@@ -47,17 +47,15 @@ export const getProducts = async () => {
         }
       }
     }`;
-	const response = await fetch(
-		'https://netlify-developer-starter.myshopify.com/api/unstable/graphql.json',
-		{
-			method: 'post',
-			headers: {
-				'Content-Type': 'application/graphql',
-				'X-Shopify-Storefront-Access-Token': 'e9c4dbd5f540d4cefcb2518f7648caf9'
-			},
-			body: query
-		}
-	)
+	// @ts-ignore
+	const response = await fetch(import.meta.env.VITE_SHOPIFY_API_ENDPOINT, {
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/graphql',
+			'X-Shopify-Storefront-Access-Token': import.meta.env.VITE_SHOPIFY_STOREFRONT_API_TOKEN
+		},
+		body: query
+	})
 		.then((res) => res.json())
 		.then((response) => {
 			return response.data.products.edges;
@@ -69,9 +67,6 @@ export const getProducts = async () => {
 // product details
 export const getProductDetails = async (handle) => {
 	try {
-		console.log('--------------------------------');
-		console.log('Retrieving product details...');
-		console.log('--------------------------------');
 		const shopifyResponse = await postToShopify({
 			query: ` 
         query getProduct($handle: String!) {
@@ -121,7 +116,6 @@ export const getProductDetails = async (handle) => {
 		});
 
 		productDetails.set(shopifyResponse.productByHandle);
-		// console.log(shopifyResponse.productByHandle);
 		return shopifyResponse.productByHandle;
 	} catch (error) {
 		console.log(error);

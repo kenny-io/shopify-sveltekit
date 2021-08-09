@@ -1,14 +1,17 @@
-import { postToShopify } from './postToShopify';
+const { postToShopify } = require("./postToShopify");
 
-export const removeItemFromCart = async ({ cartId, lineId }) => {
-	try {
-		const shopifyResponse = await postToShopify({
-			query: `
-        mutation removeItemFromCart($cartId: ID!, $lineIds: [ID!]!) {
-          cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+// Creates a cart with a single item
+exports.createCartWithItem = async ({ itemId, quantity }) => {
+  try {
+    const response = await postToShopify({
+      query: `
+        mutation createCart($cartInput: CartInput) {
+          cartCreate(input: $cartInput) {
             cart {
               id
-              lines(first: 10) {
+              createdAt
+              updatedAt
+              lines(first:10) {
                 edges {
                   node {
                     id
@@ -22,8 +25,8 @@ export const removeItemFromCart = async ({ cartId, lineId }) => {
                           currencyCode
                         }
                         product {
+                          id
                           title
-                          handle
                         }
                       }
                     }
@@ -52,14 +55,20 @@ export const removeItemFromCart = async ({ cartId, lineId }) => {
           }
         }
       `,
-			variables: {
-				cartId,
-				lineIds: [lineId]
-			}
-		});
+      variables: {
+        cartInput: {
+          lines: [
+            {
+              quantity,
+              merchandiseId: itemId,
+            },
+          ],
+        },
+      },
+    });
 
-		return shopifyResponse;
-	} catch (error) {
-		console.log(error);
-	}
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
 };

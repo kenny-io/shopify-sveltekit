@@ -1,6 +1,5 @@
 <script context="module">
 	import { getProductDetails } from '../../store';
-
 	export async function load(ctx) {
 		let handle = ctx.page.params.handle;
 		const product = await getProductDetails(handle);
@@ -17,7 +16,6 @@
 	let quantity = 0;
 	// @ts-ignore
 	let selectedProduct = productVariants[0].id;
-
 	const addToCart = async () => {
 		// add selected product to cart
 		try {
@@ -29,19 +27,16 @@
 					quantity: quantity
 				})
 			});
-
 			const data = await addToCartResponse.json();
-			console.log(data);
 
 			// save cart to localStorage
 			localStorage.setItem('cartId', data.id);
 			localStorage.setItem('cart', JSON.stringify(data));
-			window.location.reload(true);
-
-			console.log('Item added to cARt and saved in localstorage');
-		} catch (e) {}
+			location.reload();
+		} catch (e) {
+			console.log(e);
+		}
 	};
-
 	function price(itemPrice) {
 		const amount = Number(itemPrice).toFixed(2);
 		return amount + ' ' + 'USD';
@@ -71,15 +66,6 @@
 									/>
 									<label for={id}>
 										{title} - {price(priceV2.amount)}
-										{#if quantityAvailable > 10}
-											<span>(10+ left)</span>
-										{:else if quantityAvailable > 0}
-											<span>
-												(Only {quantityAvailable} left)
-											</span>
-										{:else}
-											<span> (Bummer. It's sold out!) </span>
-										{/if}
 									</label>
 								</div>
 							{/each}
@@ -87,15 +73,6 @@
 					{:else}
 						<div class="product-page-price is-solo">
 							{price(productVariants[0].priceV2.amount)}
-							{#if productVariants[0].quantityAvailable > 10}
-								<span> (10+ left) </span>
-							{:else if productVariants[0].quantityAvailable > 0}
-								<span>
-									(Only {productVariants[0].quantityAvailable} left)
-								</span>
-							{:else}
-								<span> (Bummer. It's sold out!) </span>
-							{/if}
 						</div>
 					{/if}
 					<div class="product-page-quantity-row">

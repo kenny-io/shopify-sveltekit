@@ -1,9 +1,9 @@
-import { postToShopify } from './postToShopify';
+const { postToShopify } = require("./postToShopify");
 
-export const addItemToCart = async ({ cartId, itemId, quantity }) => {
-	try {
-		const shopifyResponse = postToShopify({
-			query: `
+exports.addItemToCart = async ({ cartId, itemId, quantity }) => {
+  try {
+    const shopifyResponse = postToShopify({
+      query: `
         mutation addItemToCart($cartId: ID!, $lines: [CartLineInput!]!) {
           cartLinesAdd(cartId: $cartId, lines: $lines) {
             cart {
@@ -52,19 +52,19 @@ export const addItemToCart = async ({ cartId, itemId, quantity }) => {
           }
         }
       `,
-			variables: {
-				cartId,
-				lines: [
-					{
-						merchandiseId: itemId,
-						quantity
-					}
-				]
-			}
-		});
+      variables: {
+        cartId,
+        lines: [
+          {
+            merchandiseId: itemId,
+            quantity,
+          },
+        ],
+      },
+    });
 
-		return shopifyResponse;
-	} catch (error) {
-		console.log(error);
-	}
+    return shopifyResponse;
+  } catch (error) {
+    console.log(error);
+  }
 };

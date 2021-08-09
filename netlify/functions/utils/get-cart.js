@@ -1,11 +1,11 @@
-import { postToShopify } from './postToShopify';
+const { postToShopify } = require("./utils/postToShopify");
 
-export const getCart = async (event) => {
-	const { cartId } = JSON.parse(event.body);
+exports.handler = async (event) => {
+  const { cartId } = JSON.parse(event.body);
 
-	try {
-		const shopifyResponse = await postToShopify({
-			query: `
+  try {
+    const shopifyResponse = await postToShopify({
+      query: `
         query getCart($cartId: ID!) {
           cart(id: $cartId) {
             id
@@ -44,16 +44,16 @@ export const getCart = async (event) => {
           }
         }
       `,
-			variables: {
-				cartId
-			}
-		});
+      variables: {
+        cartId,
+      },
+    });
 
-		return {
-			statusCode: 200,
-			body: JSON.stringify(shopifyResponse)
-		};
-	} catch (error) {
-		console.log(error);
-	}
+    return {
+      statusCode: 200,
+      body: JSON.stringify(shopifyResponse),
+    };
+  } catch (error) {
+    console.log(error);
+  }
 };
