@@ -1,8 +1,24 @@
-<!-- <script context="module" ✂prettier:content✂="CglpbXBvcnQgUHJvZHVjdExpc3QgZnJvbSAnLi4vY29tcG9uZW50cy9Qcm9kdWN0TGlzdC5zdmVsdGUnOwoJZXhwb3J0IGZ1bmN0aW9uIGxvYWQoY3R4KSB7CgkJcmV0dXJuIHsgcHJvcHM6IHsgUHJvZHVjdExpc3QgfSB9OwoJfQo=" ✂prettier:content✂="e30=">{}</script> -->
-<script>
+<script context="module">
 	import ProductList from '../components/ProductList.svelte';
+	import { products, getProducts } from '../store';
+	export async function load(ctx) {
+		const productType = ctx.page.query.get('type');
+		await getProducts();
+		if (productType) {
+			products.update((items) => {
+				const updated = items.filter((product) => product.node.productType === productType);
+
+				return updated;
+			});
+		}
+
+		return { props: { ProductList } };
+	}
+</script>
+
+<script>
 	import '../../src/app.css';
-	// export let ProductList;
+	export let ProductList;
 	// @ts-ignore
 </script>
 
@@ -11,5 +27,5 @@
 </svelte:head>
 
 <main>
-	<ProductList />
+	<ProductList products={$products} />
 </main>

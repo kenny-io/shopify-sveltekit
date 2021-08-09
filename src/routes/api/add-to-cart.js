@@ -2,9 +2,8 @@ import { createCartWithItem } from './utils/createCartWithItem';
 import { addItemToCart } from './utils/addItemToCart';
 
 export async function post(request) {
-	const { cartId, itemId, quantity } = JSON.parse(request.body);
-	console.log(request.body);
-	const itemQuantity = Number(quantity);
+	let { cartId, itemId, quantity } = JSON.parse(request.body);
+	quantity = parseInt(quantity);
 	if (cartId) {
 		console.log('--------------------------------');
 		console.log('Adding item to existing cart...');
@@ -14,7 +13,7 @@ export async function post(request) {
 			cartId,
 			itemId,
 			// @ts-ignore
-			itemQuantity
+			quantity
 		});
 
 		return {
@@ -28,7 +27,7 @@ export async function post(request) {
 		const createCartResponse = await createCartWithItem({
 			itemId,
 			// @ts-ignore
-			itemQuantity
+			quantity
 		});
 		return {
 			statusCode: 200,

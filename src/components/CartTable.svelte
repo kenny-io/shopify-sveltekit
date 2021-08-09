@@ -1,48 +1,32 @@
 <script>
 	// @ts-nocheck
 	import { formatCurrency } from '../utils/currency';
-	import { getCart } from '../utils/get-cart';
 	import { onMount } from 'svelte';
 	let cartItems = [];
 	let cart;
-	let cartId;
-	onMount(async () => {
-		const data = await getCart();
-		cartId = data.id;
-		cartItems = data.lines.edges;
+	onMount(() => {
+		cart = JSON.parse(localStorage.getItem('cart'));
+		cartItems = cart.lines.edges;
 	});
-
 	function itemTotal(price, quantity) {
 		const totalPrice = Number(price) * Number(quantity);
 		return totalPrice.toFixed(2);
 	}
-
 	async function removeItem(lineId) {
 		// remove item from Shopify cart
 		const removeItemFromCart = await fetch('/api/remove-from-cart', {
 			method: 'POST',
 			body: JSON.stringify({
-				cartId,
+				cartId: localStorage.getItem('cartId'),
 				lineId
 			})
 		})
 			.then((res) => res.json())
 			.then((data) => data);
-
-		// remove item from Supabase
-		try {
-			const removeItemFromDB = await fetch('/api/update-supabase-cart', {
-				method: 'POST',
-				body: JSON.stringify(removeItemFromCart)
-			});
-			const supabaseResponse = await removeItemFromDB.json();
-			console.log(supabaseresponse);
-			return supabaseResponse;
-		} catch (e) {
-			console.log(e);
-		}
-
-		window.location.reload(true);
+		// update localStorage;
+		localStorage.setItem('cartId', removeItemFromCart.id);
+		localStorage.setItem('cart', JSON.stringify(removeItemFromCart));
+		location.reload();
 	}
 </script>
 

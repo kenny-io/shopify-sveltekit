@@ -1,5 +1,3 @@
-// const fetch = require("node-fetch");
-
 export const postToShopify = async ({ query, variables }) => {
 	try {
 		// @ts-ignore
