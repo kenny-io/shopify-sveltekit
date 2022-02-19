@@ -31,7 +31,7 @@
 			This project is
 			<a href="https://github.com/kenny-io/shopify-sveltekit"> open source on GitHub </a>, hosted
 			with <a href="https://bit.ly/2G29YwK">Netlify</a>, built with
-			<a href="https://kit.svelte.org/">SvelteKit</a> and made with 💚 by Ekene Eze (<a
+			<a href="https://kit.svelte.dev/">SvelteKit</a> and made with 💚 by Ekene Eze (<a
 				href="https://twitter.com/kenny_io">@kenny_io</a
 			>)
 		</p>
